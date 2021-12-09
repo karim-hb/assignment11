@@ -1,1 +1,1 @@
-# assignment11
+for Snake run pip install pyGame
