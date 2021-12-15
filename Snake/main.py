@@ -14,7 +14,8 @@ class Fruit:
     def randomize(self):
         self.x = random.randint(0,cell_size-1)
         self.y = random.randint(0,cell_size-1)
-        self.position = Vector2(self.x,self.y)        
+        self.position = Vector2(self.x,self.y)     
+        print(self.position)   
         
         
 class POPO:
@@ -37,6 +38,7 @@ class Snake():
         self.add_block = False
         self.remove_block = False
         self.stop = False
+        self.fruit = Fruit()   
         
     def draw(self):
         for block in self.body:
@@ -51,6 +53,7 @@ class Snake():
              copy_body = self.body[:-1]
              copy_body.insert(0,copy_body[0]+self.direction)
              self.body = copy_body[:] 
+       
         if self.remove_block == True:
              copy_body = self.body[:]
              copy_body.pop(0)
@@ -61,8 +64,10 @@ class Snake():
              copy_body.insert(0,copy_body[0]+self.direction)
              self.body = copy_body[:]      
              self.add_block = False      
-      
-        
+
+  
+            
+            
 class Main():
     def __init__(self):
         self.snake = Snake()
@@ -82,6 +87,7 @@ class Main():
         self.fruit.draw()
         self.popo.draw()
         self.draw_score()
+        
         if self.show_reset == True:
             self.game_over_msg()
 
@@ -162,15 +168,31 @@ game_font = pygame.font.SysFont("comicsansms", 24)
 
 mian_game = Main()
 
+ALL_EVENT = ''
 
 while True:
+    if mian_game.snake.body[0].y > mian_game.fruit.y and ALL_EVENT != pygame.K_DOWN:
+            mian_game.snake.direction = Vector2(0,-1)
+           # ALL_EVENT = pygame.K_RIGHT
+    elif mian_game.snake.body[0].y < mian_game.fruit.y and ALL_EVENT != pygame.K_UP:
+            mian_game.snake.direction = Vector2(0,+1)
+           # ALL_EVENT = pygame.K_LEFT
+    elif mian_game.snake.body[0].x < mian_game.fruit.x and ALL_EVENT != pygame.K_RIGHT:
+             mian_game.snake.direction = Vector2(+1,0)
+          #  ALL_EVENT = pygame.K_UP
+    elif mian_game.snake.body[0].x > mian_game.fruit.x and ALL_EVENT != pygame.K_LEFT:
+             mian_game.snake.direction = Vector2(-1,0)
+          #  ALL_EVENT = pygame.K_DOWN
     for event in pygame.event.get():
+        
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         if event.type == SCREEN_UPDATER:
+            
             mian_game.update()
         if event.type == pygame.KEYDOWN:
+            ALL_EVENT = event.key
             if event.key == pygame.K_UP:
                 if mian_game.snake.direction.y != 1:
                      mian_game.snake.direction = Vector2(0,-1)
